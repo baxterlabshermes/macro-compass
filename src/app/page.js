@@ -5,7 +5,7 @@ const cards = [
   { title: '⚡ Energy', icon: '#eab308', page: '/energy', desc: 'Oil, natural gas, grid, power, rare earths', metric: 'Energy costs driving inflation 1.8pts' },
   { title: '🥇 Hard Assets', icon: '#f59e0b', page: '/hard-assets', desc: 'Gold, silver, copper, uranium hedging plays', metric: 'Gold hits ATH on rate cut expectations' },
   { title: '🏭 IPO Pipeline', icon: '#6366f1', page: '/ipo-pipeline', desc: 'New S-1 filings, lockup expirations, underwriter quality', metric: '42 IPOs filed in last quarter' },
-  { title: '👗 Consumer & Apparel', icon: '#ec4899', page: '\consumer', desc: 'WTO (wheat flour), apparel, lifestyle brands', metric: 'Apparel sector margin pressure easing' },
+  { title: '👗 Consumer & Apparel', icon: '#ec4899', page: '/consumer-apparel', desc: 'WTO (wheat flour), apparel, lifestyle brands', metric: 'Apparel sector margin pressure easing' },
   { title: '🐎 Wellness & Leisure', icon: '#a78bfa', page: '/wellness', desc: 'Supplements, biotech, mental health tech', metric: 'Wellness sector +12% YoY growth' },
   { title: '📊 Synthesis', icon: '#3b82f6', page: '/synthesis', desc: 'Top strategies, correlations, risk flags', metric: 'See bottom-line summary' }
 ]
