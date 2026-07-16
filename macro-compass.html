@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Macro Compass | Investment Strategy Dashboard</title>
+<script src="https://cdn.tailwindcss.com"><\/script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0f172a; color: #e4edf5; font-family: 'Segoe UI', system-ui, sans-serif; }
+nav, .nav { display: flex; gap: 0; border-bottom: 1px solid #334155; background: #0f172a; position: sticky; top: 0; z-index: 50; overflow-x: auto; }
+.nav::-webkit-scrollbar { height: 4px; width: 6px; }
+.nav::-webkit-scrollbar-track { background: #0f172e; }
+.nav::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+.na { padding: 10px 16px; color: #94a3b8; text-decoration: none; cursor: pointer; font-size: 13px; font-weight: 500; white-space: nowrap; transition: .15s ease; border-bottom: 2px solid transparent; }
+.na:hover, .na.active { color: #60a5fa; border-bottom-color: #60a5fa; }
+.main-wrap { max-width: 900px; margin: 0 auto; padding: 24px; }
+.card { background: rgba(30, 41, 59, .7); border: 1px solid #334155; border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+.card h2 { font-size: 18px; font-weight: bold; color: #f1f5f9; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #334155; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.stat-card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 16px; text-align: center; transition: transform .2s ease, box-shadow .2s ease; }
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, .3); }
+.stat-val { font-size: 28px; font-weight: bold; color: #22c55e; margin-top: 4px; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; white-space: nowrap; }
+.tg-green { background: rgba(22, 163, 74, .3); color: #86efac; }
+.tg-red { background: rgba(185, 28, 28, .3); color: #fca5a5; }
+.tg-yellow { background: rgba(202, 138, 4, .3); color: #fde047; }
+.tg-blue { background: rgba(37, 99, 235, .3); color: #93c5fd; }
+.tg-purple { background: rgba(147, 51, 234, .3); color: #d8b4fe; }
+.tg-teal { background: rgba(13, 148, 136, .3); color: #5eead4; }
+.bar-wrap { height: 10px; background: #1e293b; border-radius: 5px; overflow: hidden; margin-top: 6px; }
+.bar-fill { height: 100%; border-radius: 5px; transition: width .8s ease; }
+.bf-green { background: linear-gradient(90deg, #16a34a, #22c55e); }
+.bf-yellow { background: linear-gradient(90deg, #d97706, #fbbf24); }
+.bf-red { background: linear-gradient(90deg, #dc2626, #ef4444); }
+.bf-blue { background: linear-gradient(90deg, #2563db, #3b82f6); }
+.row-flex { display: flex; gap: 12px; margin-bottom: 12px; align-items: center; }
+.flex-1 { flex: 1; }
+.flex-wrap { display: flex; flex-wrap: wrap; gap: 12px; }
+table.w-full { width: 100%; border-collapse: collapse; }
+table.w-full th { color: #94a3b8; font-size: 12px; text-transform: uppercase; padding: 10px 12px; border-bottom: 1px solid #334155; text-align: left; }
+table.w-full td { padding: 8px 12px; border-bottom: 1px solid #0f172a; color: #e2e8f0; font-size: 14px; }
+.highlight-section { background: rgba(37, 99, 235, .1); border: 1px solid rgba(37, 99, 235, .3); border-radius: 12px; padding: 20px; margin-bottom: 24px; }
+.highlight-section h2 { color: #60a5fa; font-size: 20px; font-weight: bold; margin-bottom: 8px; }
+.mono-code { font-family: 'SF Mono', monospace; background: #1e293b; border-radius: 4px; padding: 4px 8px; font-size: 12px; color: #a5f3fc; }
+.list-item { margin-bottom: 10px; line-height: 1.6; }
+.icon-label, .icon-row { display: flex; align-items: center; gap: 8px; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 16px; }
+footer { text-align: center; padding: 40px 20px; color: #64748b; font-size: 12px; border-top: 1px solid #334155; margin-top: 40px; }
+@media (max-width: 768px) { .main-wrap { padding: 16px; } .stats-grid { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } }
+</style>
+</head><body>
+
+<div id="app">
+<nav class="nav" id="navbar"></nav>
+<main class="<response clipped>[CONTENT TRUNCATED]
