@@ -2,10 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
-body { 
-  font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+@layer base {
+  :root {
+    --bg-primary: #191c1f;
+    --bg-surface: #22262a;
+    --bg-elevated: #2c3034;
+    --text-primary: #ffffff;
+    --text-secondary: #8d969e;
+    --text-tertiary: #505a63;
+    --border-subtle: rgba(255,255,255,0.08);
+    --border-active: rgba(255,255,255,0.16);
+    --accent-blue: #494fdf;
+    --accent-teal: #00a87e;
+    --accent-danger: #e23b4a;
+  }
 }
 
-@media print {
-  .no-print { display: none !important; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  letter-spacing: 0.16px;
+  line-height: 1.5;
 }
+
+/* Pill components */
+.pill-lg { padding: 14px 32px; border-radius: 9999px; }
+.pill-sm { padding: 8px 16px; border-radius: 9999px; font-size: 0.75rem; }
+
+/* Card surfaces */
+.card-surface { background: var(--bg-surface); border: 1px solid var(--border-subtle); }
+
+/* Typography - use weight 500 for headings per Revolut convention */
+.display-lg { font-weight: 500; line-height: 1.19; letter-spacing: -0.32px; }
+.display-md { font-weight: 500; line-height: 1.21; letter-spacing: -0.48px; }
+
+/* Hide scrollbar for clean look */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
