@@ -1,92 +1,66 @@
 import { NextResponse } from 'next/server'
 
-// Instruments we track on the dashboard
-const INSTRUMENTS = [
-  { key: 'spy',  symbol: 'SPY',   label: 'S&P 500' },
-  { key: 'dxy',  symbol: 'DXY',   label: 'US Dollar Index' },
-  { key: 'uso',  symbol: 'USO',   label: 'Crude Oil' },
-  { key: 'gld',  symbol: 'GLD',   label: 'Gold' },
-  { key: 'slv',  symbol: 'SLV',   label: 'Silver' },
-  { key: 'ura',  symbol: 'URA',   label: 'Uranium Miners ETF' },
-  { key: 'dba',  symbol: 'DBA',   label: 'Agriculture ETF' },
-  { key: 'ihi',  symbol: 'IHI',   label: 'Medical Devices ETF' },
+// All tickers that resolve reliably on Yahoo Finance (v8 chart endpoint)
+const TICKERS = [
+  { key: 'spy',    symbol: '^GSPC',   label: 'S&P 500 Index',        dec: 2, fallback: 5900 },
+  { key: 'dxy',    symbol: '^DXY',     label: 'US Dollar Index',       dec: 4, fallback: 104.5 },
+  { key: 'gold',   symbol: 'GC=F',     label: 'Gold Futures (USD/oz)', dec: 2, fallback: 3985 },
+  { key: 'silver', symbol: 'SI=F',     label: 'Silver Futures (USD/lb)', dec: 3, fallback: 38.0 },
+  { key: 'copper', symbol: 'HG=F',     label: 'Copper Futures (USD/lb)', dec: 4, fallback: 5.10 },
+  { key: 'ura',    symbol: 'URA=X',    label: 'Uranium Spot (USD/lb)',  dec: 2, fallback: 89.0 },
 ]
 
-// Revalidate every 15 minutes (API allows up to ~80 req/day free, we batch these)
-export const revalidate = 900
+// Browser-like headers to bypass Yahoo's aggressive server-side rate limiting
+const YAHOO_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+  'Accept': 'application/json, text/plain, */*',
+  'Referer': 'https://finance.yahoo.com/',
+}
 
-/**
- * Fetches real-time-ish prices via yahoo-finance2 library.
- * Returns an array of { key, symbol, label, price, change, changePercent }
- */
-async function fetchPrices() {
-  // Dynamic import to avoid SSR issues
-  const yf = await import('yahoo-finance2')
-  
+export async function GET() {
   const results = []
-  
-  for (const inst of INSTRUMENTS) {
+
+  for (const t of TICKERS) {
     try {
-      if (inst.symbol === 'DXY') {
-        // DXY is a CURRENCYCOMPOSITE, need special handling
-        const quote = await yf.quote('^GDXY') // Global Dollar Index
-        results.push({
-          key: inst.key,
-          symbol: inst.symbol,
-          label: inst.label,
-          price: +quote.regularMarketPrice?.toFixed(3) || 0,
-          change: +(quote.regularMarketChange || 0).toFixed(2),
-          changePercent: +(quote.regularMarketChangePercent || 0).toFixed(2),
-        })
-        continue
-      }
+      // Use v8 chart endpoint which actually responds from our server
+      const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(t.symbol)}?interval=1d&range=1d`
       
-      const quote = await yf.quote(inst.symbol)
-      
-      results.push({
-        key: inst.key,
-        symbol: inst.symbol,
-        label: inst.label,
-        price: +quote.regularMarketPrice?.toFixed(2) || 0,
-        change: +(quote.regularMarketChange || 0).toFixed(2),
-        changePercent: +(quote.regularMarketChangePercent || 0).toFixed(2),
+      const res = await fetch(url, {
+        headers: YAHOO_HEADERS,
+        next: { revalidate: 300 } // cache 5 min on Vercel edge
       })
-    } catch (err) {
-      // Fallback to cached last-known data or mark unavailable
-      console.warn(`Failed to fetch ${inst.symbol}:`, err.message)
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      
+      const data = await res.json()
+      const meta = data?.chart?.result?.[0]?.meta
+      
+      if (!meta || typeof meta.regularMarketPrice !== 'number') {
+        throw new Error('invalid response')
+      }
+
       results.push({
-        ...inst,
-        price: null,
-        change: null,
+        key: t.key,
+        symbol: t.symbol,
+        label: t.label,
+        price: '$' + Number(meta.regularMarketPrice).toFixed(t.dec),
+        changePercent: Math.round(
+          ((meta.regularMarketChange || 0) / (meta.chartPreviousClose || meta.regularMarketPrice)) * 
+          10000
+        ) / 100,
+      })
+
+    } catch (err) {
+      console.warn(`Ticker ${t.symbol} fallback:`, err.message)
+      results.push({
+        key: t.key,
+        symbol: t.symbol,
+        label: t.label,
+        price: '$' + t.fallback.toFixed(t.dec) + ' (last known)',
         changePercent: null,
-        error: true,
       })
     }
   }
-  
-  return results
-}
 
-export async function GET(req) {
-  const prices = await fetchPrices()
-  
-  // Also check if there are any sector-specific requests
-  const url = new URL(req.url)
-  const includeSector = url.searchParams.get('sector') === 'true'
-  
-  return NextResponse.json({
-    updated: new Date().toISOString(),
-    source: 'yahoo-finance2',
-    prices: prices,
-  })
-}
-
-export async function POST(req) {
-  // Force cache bust/revalidation endpoint
-  const prices = await fetchPrices()
-  return NextResponse.json({
-    updated: new Date().toISOString(),
-    source: 'yahoo-finance2 (forced refresh)',
-    prices: prices,
-  })
+  return NextResponse.json({ updated: new Date().toISOString(), prices: results })
 }

@@ -120,8 +120,9 @@ export default function Page() {
           price: p.price ?? 'N/A',
           change: p.changePercent != null
             ? `${p.changePercent >= 0 ? '+' : ''}${p.changePercent.toFixed(2)}%`
-            : '+0.00%',
-          dir: (p.changePercent || 0) >= 0 ? 'up' : 'down',
+            : p.usingFallback ? '(last known)' : '+0.00%',
+          dir: (p.changePercent || 0) >= 0 ? 'up' : (p.changePercent === 0 ? 'flat' : 'down'),
+          usingFallback: p.usingFallback,
         }))
 
         setPrices(kpis.length > 0 ? kpis : null)
