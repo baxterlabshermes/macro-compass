@@ -2,41 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --bg-primary: #191c1f;
-    --bg-surface: #22262a;
-    --bg-elevated: #2c3034;
-    --text-primary: #ffffff;
-    --text-secondary: #8d969e;
-    --text-tertiary: #505a63;
-    --border-subtle: rgba(255,255,255,0.08);
-    --border-active: rgba(255,255,255,0.16);
-    --accent-blue: #494fdf;
-    --accent-teal: #00a87e;
-    --accent-danger: #e23b4a;
-  }
+:root {
+  --bg: #0b0b0e;
+  --surface: #141420;
+  --border: rgba(255,255,255,0.07);
+  --accent: #6366f1;
+  --green: #34d399;
+  --red: #f87171;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  letter-spacing: 0.16px;
-  line-height: 1.5;
+  background: var(--bg);
+  color: #e4e4ed;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Pill components */
-.pill-lg { padding: 14px 32px; border-radius: 9999px; }
-.pill-sm { padding: 8px 16px; border-radius: 9999px; font-size: 0.75rem; }
+/* Gradient accents */
+.grad-green { background: linear-gradient(135deg, #065f46, #047857); }
+.grad-amber { background: linear-gradient(135deg, #78350f, #92400e); }
+.grad-purple { background: linear-gradient(135deg, #581c87, #6b21a8); }
 
-/* Card surfaces */
-.card-surface { background: var(--bg-surface); border: 1px solid var(--border-subtle); }
+/* Card styles */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.card:hover {
+  border-color: rgba(255,255,255,0.12);
+  transition: border-color 150ms ease;
+}
 
-/* Typography - use weight 500 for headings per Revolut convention */
-.display-lg { font-weight: 500; line-height: 1.19; letter-spacing: -0.32px; }
-.display-md { font-weight: 500; line-height: 1.21; letter-spacing: -0.48px; }
+/* Pill badge */
+.pill-sm {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 4px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.6px;
+  border-radius: 9999px; text-transform: uppercase; white-space: nowrap;
+}
 
-/* Hide scrollbar for clean look */
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+/* Scrollbar hide */
+.no-scrollbar::-webkit-scrollbar { display: none }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none }
