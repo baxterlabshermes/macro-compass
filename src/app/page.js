@@ -1,63 +1,135 @@
-'use client'
+import Link from 'next/link'
 
-const cards = [
-  { title: '🌾 Food & Water', icon: '#22c55e', page: '/food-water', desc: 'Wheat, corn, soybeans, fertilizers, water utilities', metric: 'Global crop prices +4.2% YoY' },
-  { title: '⚡ Energy', icon: '#eab308', page: '/energy', desc: 'Oil, natural gas, grid, power, rare earths', metric: 'Energy costs driving inflation 1.8pts' },
-  { title: '🥇 Hard Assets', icon: '#f59e0b', page: '/hard-assets', desc: 'Gold, silver, copper, uranium hedging plays', metric: 'Gold hits ATH on rate cut expectations' },
-  { title: '🏭 IPO Pipeline', icon: '#6366f1', page: '/ipo-pipeline', desc: 'New S-1 filings, lockup expirations, underwriter quality', metric: '42 IPOs filed in last quarter' },
-  { title: '👗 Consumer & Apparel', icon: '#ec4899', page: '/consumer-apparel', desc: 'WTO (wheat flour), apparel, lifestyle brands', metric: 'Apparel sector margin pressure easing' },
-  { title: '🐎 Wellness & Leisure', icon: '#a78bfa', page: '/wellness', desc: 'Supplements, biotech, mental health tech', metric: 'Wellness sector +12% YoY growth' },
-  { title: '📊 Synthesis', icon: '#3b82f6', page: '/synthesis', desc: 'Top strategies, correlations, risk flags', metric: 'See bottom-line summary' }
+// Mock data — real API integration later
+const marketKPIs = [
+  { label: 'S&P 500', value: '5,892', change: '+0.8%', direction: 'up' },
+  { label: 'DXY (Dollar)', value: '104.7', change: '-0.4%', direction: 'down' },
+  { label: 'WTI Crude', value: '$68.34', change: '+1.2%', direction: 'up' },
+  { label: 'Gold', value: '$3,542', change: '-0.3%', direction: 'down' },
+]
+
+const topCalls = [
+  {
+    rank: 1,
+    signal: 'BUY',
+    asset: 'Silver (SLV)',
+    thesis: 'Central bank buying + solar demand creating historic undersupply. Rate cuts below accelerate price.',
+    confidence: 'HIGH',
+    horizon: '12-36mo'
+  },
+  {
+    rank: 2,
+    signal: 'BUY',
+    asset: 'Uranium Miners (CCJ)',
+    thesis: 'SMR buildout accelerates. Supply deficit widening while reactors stay online.',
+    confidence: 'MED-HIGH',
+    horizon: '18-60mo'
+  },
+  {
+    rank: 3,
+    signal: 'HOLD',
+    asset: 'Gold (GLD)',
+    thesis: 'Solid trend but crowded trade. Add on dips below $3,400.',
+    confidence: 'MED',
+    horizon: '6-18mo'
+  },
+  {
+    rank: 4,
+    signal: 'WATCH',
+    asset: 'IPO Window (Q3-Q4)',
+    thesis: 'Post-rate-cut window opens but pick winners carefully. Watch EDGAR S-1 filings.',
+    confidence: 'MED',
+    horizon: '6mo entry'
+  },
+]
+
+const sectorSignals = [
+  { name: 'Food & Water', signal: 'HOLD', sentiment: 5, topLine: 'Prices stable but no catalyst yet.' },
+  { name: 'Energy', signal: 'WATCH', sentiment: 4, topLine: 'Capitulation selling may be near at $63.' },
+  { name: 'Hard Assets', signal: 'BUY', sentiment: 8, topLine: 'Best risk/reward in metals. Silver leading.' },
+  { name: 'IPO Pipeline', signal: 'WATCH', sentiment: 4, topLine: 'Window opens after rate cuts — timing uncertain.' },
+  { name: 'Consumer/Apparel', signal: 'HOLD', sentiment: 5, topLine: 'Margins stabilizing but no clear winner.' },
+  { name: 'Wellness/Leisure', signal: 'BUY', sentiment: 7, topLine: 'AI fatigue driving demand. Nootropics growing fast.' },
 ]
 
 export default function Home() {
   return (
-    <div>
-      <div className="mb-10">
-        <h1 className="text-4xl font-bold text-white mb-2">Macro Compass</h1>
-        <p className="text-slate-400 text-lg">Global commodity, equity & IPO investment intelligence — updated daily.</p>
+    <div className="max-w-6xl mx-auto space-y-10 pb-20">
+      
+      {/* Header */}
+      <div>
+        <h1 className="text-3xl font-bold text-white mb-1">Macro Compass</h1>
+        <p className="text-slate-400">Daily macro intelligence. Actionable calls only.</p>
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 no-print">
-        {[
-          { label: 'S&P 500', value: '5,892.43', change: '+0.8%', up: true },
-          { label: 'DXY (Dollar Index)', value: '104.72', change: '-0.4%', up: false },
-          { label: 'Crude Oil WTI', value: '$68.34/bbl', change: '+1.2%', up: true },
-          { label: 'Gold Spot', value: '$3,542/oz', change: '-0.3%', up: false }
-        ].map(k => (
-          <div key={k.label} className="bg-surface border border-border rounded-lg p-4">
-            <p className="text-xs text-slate-400 uppercase tracking-wide mb-1">{k.label}</p>
-            <p className="text-xl font-bold text-white">{k.value}</p>
-            <span className={`text-sm ${k.up ? 'text-success' : 'text-danger'} font-semibold`}>{k.change}</span>
-          </div>
-        ))}
-      </div>
-
-      <h2 className="text-2xl font-bold text-white mb-6">Investment Dashboard — Select a Sector</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {cards.map(c => (
-          <a key={c.page} href={c.page}
-             className="block group cursor-pointer transform hover:scale-[1.02] transition-transform duration-300"
-             style={{ display: 'flex', alignItems: 'stretch' }}>
-            <div className="bg-surface border border-border rounded-xl p-6 w-full hover:border-accent transition-colors relative overflow-hidden">
-              <div className="w-14 h-14 rounded-lg mb-4 flex items-center justify-center text-3xl" style={{ backgroundColor: c.icon + '20', color: c.icon }}>{c.title.split(' ')[0]}</div>
-              <h3 className="text-lg font-bold text-white mb-1 group-hover:text-accent">{c.title.slice(2)}</h3>
-              <p className="text-sm text-slate-400 mb-3">{c.desc}</p>
-              <p className="text-xs text-gold font-semibold bg-yellow-900/20 inline-block px-2 py-1 rounded border border-yellow-700/30">▶ {c.metric}</p>
+      {/* Market Overview */}
+      <section>
+        <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">Market Snapshot</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {marketKPIs.map(k => (
+            <div key={k.label} className="bg-surface border border-border rounded-lg p-3">
+              <p className="text-xs text-slate-500">{k.label}</p>
+              <p className="text-xl font-bold text-white mt-1">{k.value}</p>
+              <p className={`text-sm font-semibold mt-1 ${k.direction === 'up' ? 'text-green-400' : 'text-red-400'}`}>{k.change}</p>
             </div>
-          </a>
-        ))}
-      </div>
+          ))}
+        </div>
+      </section>
 
-      <div className="mt-12 bg-surface border border-border rounded-xl p-8 max-w-4xl mx-auto no-print">
-        <h3 className="text-lg font-semibold text-white mb-2">💡 How to Use This Dashboard</h3>
-        <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
-          Each tab provides a consultant-style drilldown with live price data, macro trend analysis, 
-          related equities, IPO overlap, and sentiment. Tap any card above to explore. 
-          The <a href="/synthesis" className="text-accent hover:underline font-medium">Synthesis & Strategy</a> tab combines all sectors into actionable thesis statements for the 2026–2031 horizon.
-        </p>
-      </div>
+      {/* Top Calls */}
+      <section className="bg-surface border border-border rounded-lg p-6">
+        <h2 className="text-xl font-bold text-white mb-1">Top Investment Calls</h2>
+        <p className="text-slate-400 text-sm mb-5">Highest conviction signals across all sectors. Sorted by opportunity size.</p>
+
+        <div className="space-y-3">
+          {topCalls.map(call => (
+            <div key={call.rank} className="flex items-start gap-4 p-4 border border-slate-700 rounded-lg hover:border-accent transition-colors">
+              <div className="shrink-0 w-28 pt-1">
+                <span className={`text-lg font-bold px-2 py-0.5 rounded text-sm ${
+                  call.signal === 'BUY' ? 'bg-green-900/40 text-green-300' :
+                  call.signal === 'SELL' ? 'bg-red-900/40 text-red-300' :
+                  call.signal === 'HOLD' ? 'bg-yellow-900/40 text-yellow-300' :
+                  'bg-slate-700/40 text-slate-400'
+                }`}>{call.signal}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-semibold">{call.asset}</p>
+                <p className="text-sm text-slate-300 mt-1 leading-relaxed">{call.thesis}</p>
+              </div>
+              <div className="shrink-0 text-right min-w-[80px]">
+                <p className="text-xs text-slate-500">HORIZON</p>
+                <p className="text-sm text-white font-medium">{call.horizon}</p>
+                <p className="text-xs text-slate-500 mt-1">CONFIDENCE</p>
+                <p className="text-sm font-medium" style={{ color: call.confidence === 'HIGH' ? '#22c55e' : call.confidence === 'MED-HIGH' ? '#84cc16' : '#eab308' }}>{call.confidence}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Sector Signals */}
+      <section className="bg-surface border border-border rounded-lg p-6">
+        <h2 className="text-xl font-bold text-white mb-1">Sector Outlook</h2>
+        <p className="text-slate-400 text-sm mb-5">One-line summary per sector. Click for details.</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {sectorSignals.map(s => (
+            <a key={s.name} href="/synthesis" className="flex items-center gap-4 p-4 border border-slate-700 rounded-lg hover:border-accent transition-colors">
+              <span className={`text-lg font-bold px-3 py-1 rounded text-sm shrink-0 ${
+                s.signal === 'BUY' ? 'bg-green-900/40 text-green-300' :
+                s.signal === 'SELL' ? 'bg-red-900/40 text-red-300' :
+                s.signal === 'HOLD' ? 'bg-yellow-900/40 text-yellow-300' :
+                'bg-slate-700/40 text-slate-400'
+              }`}>{s.signal}</span>
+              <div className="min-w-0">
+                <p className="text-white font-semibold">{s.name}</p>
+                <p className="text-sm text-slate-300 truncate">{s.topLine}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
     </div>
   )
 }
