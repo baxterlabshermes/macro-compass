@@ -78,7 +78,7 @@ export async function GET() {
         prices.push({
           key: t.key,
           label: t.label,
-          price: result.current.toFixed(t.dec),
+          price: "$" + result.current.toFixed(t.dec),
           changePercent: result.changePct != null ? Math.round(result.changePct * 100) / 100 : null,
           source: `Yahoo Finance (${t.symbol})`,
         });
